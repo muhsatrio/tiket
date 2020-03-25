@@ -1,0 +1,23 @@
+.ticket-box {
+    margin: 0 auto;
+    text-align: center;
+}
+
+.row .alert-box {
+    visibility: hidden;
+}
+
+.row .detail-box {
+    visibility: hidden;
+}
+
+.alert-box {
+    margin: 0 auto;
+}
+.space {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.detail-box {
+    margin: 0 auto;
+}
