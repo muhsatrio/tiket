@@ -50,8 +50,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |		my-controller/my-method	-> my_controller/my_method
 */
 $route['default_controller'] = 'Tiket';
-$route['login'] = 'Login';
-$route['logout'] = 'Login/logout';
+$route['login'] = 'User';
+$route['logout'] = 'User/logout';
+$route['tiket'] = 'Tiket/tiket';
+$route['profile'] = 'Tiket/profile';
+$route['registrasi'] = 'User/registrasi';
 $route['tiket/get_tiket'] = 'Tiket/get_tiket';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;

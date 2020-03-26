@@ -3,14 +3,6 @@
     text-align: center;
 }
 
-.row .alert-box {
-    visibility: hidden;
-}
-
-.row .detail-box {
-    visibility: hidden;
-}
-
 .alert-box {
     margin: 0 auto;
 }
@@ -20,11 +12,12 @@
 }
 .detail-box {
     margin: 0 auto;
-    padding-bottom: 20px;
 }
-.row .alert-list {
+
+.row .alert-box {
     visibility: hidden;
 }
-.alert-list {
-    margin: 0 auto;
+
+.row .detail-box {
+    visibility: hidden;
 }

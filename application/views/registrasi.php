@@ -7,9 +7,10 @@
     <link rel="stylesheet" href="<?php echo base_url('assets/css/login/style.css'); ?>">
     <script src="<?php echo base_url('assets/js/jquery-3.4.1.min.js'); ?>"></script>
     <script src="<?php echo base_url('assets/js/bootstrap.min.js'); ?>"></script>
-    <title>Login</title>
+    <title>Registrasi</title>
 </head>
 <body>
+<!-- d9534f -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-danger">
         <a class="navbar-brand" href="#">Aplikasi Ticket</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -28,22 +29,37 @@
     </nav>
     <div class="container">
         <center>
-            <h1>Login</h1>
+            <h1>Registrasi</h1>
         </center>
+        <div class="row">
+            <div class="alert-box space">
+                <div id="alert-list" class="alert alert-danger">
+                </div>
+            </div>
+        </div>
         <div class="row">
             <div class="login-box">
                 <div class="form-group">
-                    <label for="email">Username:</label>
+                    <label for="nama">Nama:</label>
+                    <input type="text" class="form-control" id="nama">
+                </div>
+                <div class="form-group">
+                    <label for="username">ID:</label>
                     <input type="text" class="form-control" id="username">
+                </div>
+                <div class="form-group">
+                    <label for="username">Sub Unit:</label>
+                    <input type="text" class="form-control" id="sub_unit">
                 </div>
                 <div class="form-group">
                     <label for="pwd">Password:</label>
                     <input type="password" class="form-control" id="password">
                 </div>
-                <div class="checkbox">
-                  <label>Belum memiliki user? Silahkan registrasi <a href="<?php echo base_url('index.php/registrasi'); ?>">disini</a></label>
+                <div class="form-group">
+                    <label for="pwd_confirm">Konfirmasi Password:</label>
+                    <input type="password" class="form-control" id="password_confirm">
                 </div>
-                <button id="submit" type="submit" class="btn btn-danger">Submit</button>
+                <button id="submit" type="submit" class="btn btn-danger">Daftar</button>
             </div>
         </div>
     </div>
@@ -51,20 +67,33 @@
         $(document).ready(function () {
             let BASE_URL = "<?php echo base_url();?>index.php";
             $("#submit").click(function () { 
+                let nama = $("#nama").val();
                 let username = $("#username").val();
                 let password = $("#password").val();
-                $.post(BASE_URL + "/user/proccess_login", {
+                let password_confirm = $("#password_confirm").val();
+                let sub_unit = $("#sub_unit").val();
+                
+                $.post(BASE_URL + "/user/proccess_register", {
+                    nama,
                     username,
-                    password
+                    password,
+                    password_confirm,
+                    sub_unit
                 },
                 function (data) {
-                    // console.log(data.status);
                     if (data.status==200) {
-                        alert('Login berhasil');
+                        alert('Registrasi berhasil! Silahkan login kembali dengan user yang telah anda daftarkan.');
                         location.href = BASE_URL;
                     }
                     else {
-                        alert('Username atau password salah, silahkan login kembali.');
+                        let errorMessage = Object.values(data.message);
+                        $(".row .alert-box").css("visibility", "visible");
+                        $("#alert-list").empty();
+                        $("#alert-list").append('<ul>');
+                        errorMessage.forEach(message => {
+                            $("#alert-list").append(`<li>${message}</li>`);
+                        });
+                        $("#alert-list").append('</ul>');
                     }
                 });
             });

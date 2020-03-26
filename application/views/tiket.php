@@ -10,15 +10,18 @@
     <title>Tiket</title>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <a class="navbar-brand" href="<?php echo base_url(); ?>">Aplikasi Ticket</a>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-danger">
+        <a class="navbar-brand" href="<?php echo base_url('index.php/tiket'); ?>">Aplikasi Ticket</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
             <li class="nav-item active">
-                <a class="nav-link" href="<?php echo base_url(); ?>">Home <span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="<?php echo base_url('index.php/tiket'); ?>">Input Ticket</a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="<?php echo base_url('index.php/profile'); ?>">My Profile</a>
             </li>
             <li class="nav-item active">
                 <a class="nav-link" href="<?php echo base_url('index.php/logout'); ?>">Logout</a>
@@ -33,34 +36,77 @@
                     <label for="ticket">Masukkan nomor tiket:</label>
                     <input type="number" class="form-control" id="ticket">
                 </div>
-                <button id="submit" type="submit" class="btn btn-primary">Submit</button>
+                <button id="submit" type="submit" class="btn btn-danger">Submit</button>
             </div>
         </div>
         <div class="row">
             <div class="alert-box space">
-                <div class="alert alert-danger">
-                    Tiket tidak ditemukan, silahkan input kembali.
+                <div id="textMessage" class="alert alert-danger">
+                    <!-- Tiket tidak ditemukan, silahkan input kembali. -->
                 </div>
             </div>
         </div>
         <div class="row">
             <div class="detail-box">
-                <table class="table">
-                    <thead>
-                        <tr>
-                        <th scope="col">No. Tiket</th>
-                        <th scope="col">Deskripsi</th>
-                        <th scope="col">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                        <td class="no_tiket"></td>
-                        <td class="deskripsi"></td>
-                        <td class="status"></td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div style="padding-bottom: 30px;">
+                    <center>
+                        <h5>Masukkan Data Dibawah Ini</h5>
+                    </center>
+                </div>
+                    <div class="row">
+                        <div class="alert-list space">
+                            <div id="alert-list" class="alert alert-danger">
+                            </div>
+                        </div>
+                    </div>
+                <div class="form-group">
+                    <label for="no_ticket">No. Tiket:</label>
+                    <input type="text" class="form-control" id="no_ticket" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="no_internet">No. Internet:</label>
+                    <input type="text" class="form-control" id="no_internet" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="service">Service:</label>
+                    <input type="text" class="form-control" id="service" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="jenis_ont">Jenis Ont:</label>
+                    <input type="text" class="form-control" id="jenis_ont">
+                </div>
+                <div class="form-group">
+                    <label for="type_ont">Type Ont:</label>
+                    <input type="text" class="form-control" id="type_ont">
+                </div>
+                <div class="form-group">
+                    <label for="actual_solution">Actual Solution:</label>
+                    <input type="text" class="form-control" id="actual_solution">
+                </div>
+                <div class="form-group">
+                    <label for="keterangan">Keterangan:</label>
+                    <input type="text" class="form-control" id="keterangan">
+                </div>
+                <div class="form-group">
+                    <label for="status">Status:</label>
+                    <select class="form-control" id="status">
+                        <option>Dispatch</option>
+                        <option>Close</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="loker_awal">Loker Awal:</label>
+                    <input type="text" class="form-control" id="loker_awal" value="ROC" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="resolved">Resolved:</label>
+                    <input type="text" class="form-control" id="resolved" value="ROC" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="agent">Agent:</label>
+                    <input type="text" class="form-control" id="agent" disabled>
+                </div>
+                <button id="simpan" type="submit" class="btn btn-danger">Simpan</button>
             </div>
         </div>
     </div>
@@ -74,16 +120,68 @@
                 },
                 function (results, status) {
                     if (results.data.length>0) {
-                        
-                        $(".row .alert-box").css("visibility", "hidden");
-                        $(".no_tiket").html(results.data[0].no_ticket);
-                        $(".deskripsi").html(results.data[0].deskripsi);
-                        $(".status").html(results.data[0].status);
-                        $(".row .detail-box").css("visibility", "visible");
+                        if (results.data[0].created_at!==null) {
+                            $(".row .detail-box").css("visibility", "hidden");
+                            $("#textMessage").empty();
+                            $("#textMessage").append("Tiket tersebut sudah diinput sebelumnya..");
+                            $(".row .alert-box").css("visibility", "visible");
+                        }
+                        else {
+                            $(".row .alert-box").css("visibility", "hidden");
+                            $("#no_ticket").val(results.data[0].no_ticket);
+                            $("#no_internet").val(results.data[0].no_internet);
+                            $("#service").val(results.data[0].service);
+                            $("#agent").val(results.data[0].agent);
+                            $(".row .detail-box").css("visibility", "visible");
+                        }
                     }
                     else {
                         $(".row .detail-box").css("visibility", "hidden");
+                        $("#textMessage").empty();
+                        $("#textMessage").append("Tiket tidak ditemukan, silahkan input kembali.");
                         $(".row .alert-box").css("visibility", "visible");
+                    }
+                });
+            });
+            $("#simpan").click(function (e) { 
+                let no_tiket = $("#no_ticket").val();
+                let no_internet = $("#no_internet").val();
+                let service = $("#service").val();
+                let jenis_ont = $("#jenis_ont").val();
+                let type_ont = $("#type_ont").val();
+                let actual_solution = $("#actual_solution").val();
+                let keterangan = $("#keterangan").val();
+                let status = $("#status").val();
+                let loker_awal = $("#loker_awal").val();
+                let resolved = $("#resolved").val();
+                let agent = $("#agent").val();
+                $.post(BASE_URL + "/tiket/proccess_tiket", {
+                    no_tiket,
+                    no_internet,
+                    service,
+                    jenis_ont,
+                    type_ont,
+                    actual_solution,
+                    keterangan,
+                    status,
+                    loker_awal,
+                    resolved,
+                    agent
+                },
+                function (data) {
+                    if (data.status==200) {
+                        alert('Submit tiket anda berhasil!');
+                        location.href = BASE_URL;
+                    }
+                    else {
+                        let errorMessage = Object.values(data.message);
+                        $(".row .alert-list").css("visibility", "visible");
+                        $("#alert-list").empty();
+                        $("#alert-list").append('<ul>');
+                        errorMessage.forEach(message => {
+                            $("#alert-list").append(`<li>${message}</li>`);
+                        });
+                        $("#alert-list").append('</ul>');
                     }
                 });
             });

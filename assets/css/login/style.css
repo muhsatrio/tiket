@@ -1,3 +1,11 @@
 .login-box {
     margin: 0 auto;
 }
+
+.row .alert-box {
+    visibility: hidden;
+}
+
+.alert-box {
+    margin: 0 auto;
+}

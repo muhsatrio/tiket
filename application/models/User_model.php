@@ -8,8 +8,10 @@ class User_model extends CI_Model
 
     public function set($data) {
         $query = $this->db->insert('user', array(
+            "nama" => $data['nama'],
             'username' => $data['username'],
-            'password' => $data['password']
+            'password' => md5($data['password']),
+            "sub_unit" => $data['sub_unit']
         ));
         if ($query) {
             $response['status'] = 200;
@@ -37,6 +39,13 @@ class User_model extends CI_Model
             $response['message'] = 'Login Failed';
         }
         return $response;
+    }
+
+    public function get($user) {
+        $query = $this->db->get_where('user', array(
+            'username' => $user
+        ));        
+        return $query->result_array();
     }
     
 }
