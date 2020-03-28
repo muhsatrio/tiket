@@ -8,26 +8,49 @@ class Ticket_model extends CI_Model
     
     public function get($id = NULL) {
         if ($id==NULL) {
-            $this->db->where("created_at IS NOT NULL");
-            $query = $this->db->get('ticket');
+            $newArray = [];
+            $queryTicketNew = $this->db->get('ticket_new')->result_array();
+            foreach ($queryTicketNew as $ticket) {
+                $temp = $this->db->get_where('ticket', array(
+                    'no_ticket' => $ticket['no_ticket']
+                ))->result_array();
+                $data = $temp[0];
+                $arrTemp = array(
+                    'no_internet' => $data['no_internet'],
+                    'service' => $data['service'],
+                );
+                array_push($newArray, array_merge($ticket, $arrTemp));
+            }
+            $query = $newArray;
         }
         else {
-            $query = $this->db->get_where('ticket', array('no_ticket' => $id));
+            $query = $this->db->get_where('ticket', array('no_ticket' => $id))->result_array();
         }
-        return $query->result_array();
+        return $query;
     }
 
-    public function update($id, $data) {
-        $query = $this->db->update('ticket', $data, array('no_ticket' => $id));
+    public function get_ticket_new($no_ticket) {
+        $query = $this->db->get_where('ticket_new', array('no_ticket' => $no_ticket))->result_array();
+        return $query;
+    }
+
+    public function insert_new($data) {
+        $query = $this->db->insert('ticket_new', $data);
         if ($query) {
             $response['status'] = 200;
             $response['message'] = 'Success';
         }
         else {
             $response['status'] = 400;
-            $response['message'] = 'Bad Request';
+            $response['message'] = $this->db->error();
         }
         return $response;
+    }
+
+    public function delete($no_ticket) {
+        $this->db->delete('ticket_new', array(
+            'no_ticket' => $no_ticket
+        ));
     }
     
 }

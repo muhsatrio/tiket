@@ -43,7 +43,7 @@
                 <div class="checkbox">
                   <label>Belum memiliki user? Silahkan registrasi <a href="<?php echo base_url('index.php/registrasi'); ?>">disini</a></label>
                 </div>
-                <button id="submit" type="submit" class="btn btn-danger">Submit</button>
+                <button id="submit" type="submit" class="btn btn-danger">Login</button>
             </div>
         </div>
     </div>

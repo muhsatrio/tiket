@@ -54,6 +54,7 @@
                         <th scope="col">Resolved</th>
                         <th scope="col">Agent</th>
                         <th scope="col">Tanggal Submit</th>
+                        <th scope="col"></th>
                         </tr>
                     </thead>
                     <tbody id="listTiket">
@@ -71,6 +72,9 @@
         $(document).ready(function () {
             let BASE_URL = "<?php echo base_url();?>index.php";
             let ticketNum = $("#ticket").val();
+            $("#delete").click(function (e) { 
+                console.log(e);
+            });
             $.get(BASE_URL + "/tiket/get_tiket",
             function (results, status) {
                 if (results.data.length>0) {
@@ -89,6 +93,7 @@
                         $("#listTiket").append(`<td>${tiket.resolved}</td>`);
                         $("#listTiket").append(`<td>${tiket.agent}</td>`);
                         $("#listTiket").append(`<td>${tiket.created_at}</td>`);
+                        $("#listTiket").append(`<td><a href='${BASE_URL}/tiket/delete?no_ticket=${tiket.no_ticket}' class='btn btn-danger' role='button'>Delete</a></td>`);
                         $("#listTiket").append("</tr>");    
                     });
                     $(".row .detail-box").css("visibility", "visible");
@@ -98,7 +103,6 @@
                     $(".row .alert-box").css("visibility", "visible");
                 }
             });
-            
         });
     </script>
 </body>

@@ -119,32 +119,24 @@
                     no_tiket: ticketNum
                 },
                 function (results, status) {
-                    if (results.data.length>0) {
-                        if (results.data[0].created_at!==null) {
-                            $(".row .detail-box").css("visibility", "hidden");
-                            $("#textMessage").empty();
-                            $("#textMessage").append("Tiket tersebut sudah diinput sebelumnya..");
-                            $(".row .alert-box").css("visibility", "visible");
-                        }
-                        else {
-                            $(".row .alert-box").css("visibility", "hidden");
-                            $("#no_ticket").val(results.data[0].no_ticket);
-                            $("#no_internet").val(results.data[0].no_internet);
-                            $("#service").val(results.data[0].service);
-                            $("#agent").val(results.data[0].agent);
-                            $(".row .detail-box").css("visibility", "visible");
-                        }
+                    if (results.status===200) {
+                        $(".row .alert-box").css("visibility", "hidden");
+                        $("#no_ticket").val(results.data[0].no_ticket);
+                        $("#no_internet").val(results.data[0].no_internet);
+                        $("#service").val(results.data[0].service);
+                        $("#agent").val(results.data[0].agent);
+                        $(".row .detail-box").css("visibility", "visible");
                     }
                     else {
                         $(".row .detail-box").css("visibility", "hidden");
                         $("#textMessage").empty();
-                        $("#textMessage").append("Tiket tidak ditemukan, silahkan input kembali.");
+                        $("#textMessage").append(results.message);
                         $(".row .alert-box").css("visibility", "visible");
                     }
                 });
             });
             $("#simpan").click(function (e) { 
-                let no_tiket = $("#no_ticket").val();
+                let no_tiket = $("#ticket").val();
                 let no_internet = $("#no_internet").val();
                 let service = $("#service").val();
                 let jenis_ont = $("#jenis_ont").val();

@@ -46,13 +46,25 @@ class Tiket extends CI_Controller
             $no_tiket = $this->input->get('no_tiket');
             $data = $this->ticket_model->get($no_tiket);
             if (count($data)>0) {
-                $userLogged = $this->session->userdata('user');
-                $query = $this->user_model->get($userLogged);
-                $data[0]['agent'] = $query[0]['nama'];
+                $dataTicketNew = $this->ticket_model->get_ticket_new($no_tiket);
+                if (count($dataTicketNew)>0) {
+                    $response['status'] = 400;
+                    $response['message'] = "Tiket tersebut sudah diinput sebelumnya.";
+                }
+                else {
+                    $userLogged = $this->session->userdata('user');
+                    $query = $this->user_model->get($userLogged);
+                    $data[0]['agent'] = $query[0]['nama'];
+                    $response['status'] = 200;
+                    $response['message'] = "Success";
+                    $response['data'] = $data;
+                }
             }
-            $response['status'] = 200;
-            $response['message'] = "Success";
-            $response['data'] = $data;
+            else {
+                $response['status'] = 400;
+                $response['message'] = "Tiket tidak ditemukan, silahkan input kembali.";
+                // $response['data'] = [];
+            }
         }
         header('Content-Type: application/json');
         echo json_encode($response);
@@ -61,7 +73,7 @@ class Tiket extends CI_Controller
         $this->session;
         date_default_timezone_set('Asia/Makassar');
         $date = date('Y-m-d H:i:s');
-        $id = (int)$this->input->post('no_ticket');
+        $id = (int)$this->input->post('no_tiket');
         $data = array(
             'jenis_ont' => $this->input->post('jenis_ont'),
             'type_ont' => $this->input->post('type_ont'),
@@ -73,9 +85,11 @@ class Tiket extends CI_Controller
             'agent' => $this->input->post('agent'),
             'created_at' => $date,
             'created_by' => $this->session->userdata('user'),
+            'no_ticket' => $id
         );
         $this->form_validation->set_message('required', '{field} wajib diisi.');
-
+        $this->form_validation->set_message('is_unique', '{field} tersebut sudah disii.');
+        $this->form_validation->set_rules('no_ticket', 'No Tiket', 'is_unique[ticket_new.no_ticket]');
         $this->form_validation->set_rules('jenis_ont', 'Jenis Ont', 'required');
         $this->form_validation->set_rules('type_ont', 'Type Ont', 'required');
         $this->form_validation->set_rules('actual_solution', 'Actual Solution Unit', 'required');
@@ -83,7 +97,7 @@ class Tiket extends CI_Controller
         $this->form_validation->set_rules('status', 'Status', 'required');
 
         if ($this->form_validation->run()) {
-            $response = $this->ticket_model->update($id, $data);
+            $response = $this->ticket_model->insert_new($data);
         }
         else {
             $response = array(
@@ -107,6 +121,16 @@ class Tiket extends CI_Controller
         else {
             $this->load->view('myprofile');
         }
+    }
+    public function delete() {
+        $no_ticket = $this->input->get('no_ticket');
+        $response = $this->ticket_model->delete($no_ticket);
+        redirect('profile');
+    }
+    public function test() {
+        $data = $this->ticket_model->get();
+        header('Content-Type: application/json');
+        echo json_encode($data);
     }
 }
 
